@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import esbuildWasm from "esbuild-wasm";
 import { unpkgPathPlugin } from "./unpkgPlugin";
+import Editor from "./Editor";
 const App:React.FC = () => {
 
     const [initialized, setInitialized] = useState(false);
@@ -67,6 +68,7 @@ const App:React.FC = () => {
     },[initialized])
     return (
         <div>
+        <Editor/>
          <textarea onChange={(e)=>setInput(e.target.value)} value={input} onKeyUp={e=>{
                 if(e.key === 'Enter' && e.ctrlKey){
                     onSubmitListener();
