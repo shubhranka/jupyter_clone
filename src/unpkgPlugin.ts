@@ -40,7 +40,8 @@ export const unpkgPathPlugin = (input:string) => {
           };
         } else {
           const key = args.path;
-          const myResult = cacheInstance.getItem(key);
+          const myResult = await cacheInstance.getItem(key);
+          // console.log(myResult)
           if (myResult) {
             return myResult;
           }
