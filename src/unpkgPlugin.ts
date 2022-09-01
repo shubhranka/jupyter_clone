@@ -7,6 +7,7 @@ const cacheInstance:any = localforage.createInstance({
 
 // Make cacheInstance available to global scope
 (window as any).localForageCacheInstance = cacheInstance;
+
 export const unpkgPathPlugin = (input:string) => {
   return {
     name: 'unpkg-path-plugin',
