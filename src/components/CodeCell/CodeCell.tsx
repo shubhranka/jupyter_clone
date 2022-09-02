@@ -3,6 +3,7 @@ import Editor from "../../Editor";
 import IFrame from "../IFrame/IFrame";
 import bundler from "../../bundler/bundler";
 import "./CodeCell.css";
+import { ResizableBox } from 'react-resizable';
 
 const CodeCell : React.FC<{}> = (props) => {
     const [code, setCode] = useState<string>("");
@@ -51,17 +52,20 @@ const CodeCell : React.FC<{}> = (props) => {
     },[code])
   
     return (
-      <div className="code_cell">
-        <Editor
-          // onChangeHandler={(inp: string | undefined) => setInput(inp as string)}
-          // onSubmitHandle={() => submitButtonRef.current?.click()}
-          onSubmitHandle={onSubmitListener}
-        />
-        {/* <button ref={submitButtonRef} onClick={()=>onSubmitListener(input)}>
-          RUN
-        </button> */}
-        <IFrame iframeRef={iframeRef} />
-      </div>
+
+        <ResizableBox height={200} width={Infinity*0.5} resizeHandles={["s"]}>
+          <div className="code_cell">
+            <Editor
+              // onChangeHandler={(inp: string | undefined) => setInput(inp as string)}
+              // onSubmitHandle={() => submitButtonRef.current?.click()}
+              onSubmitHandle={onSubmitListener}
+            />
+            {/* <button ref={submitButtonRef} onClick={()=>onSubmitListener(input)}>
+              RUN
+            </button> */}
+            <IFrame iframeRef={iframeRef} />
+          </div>
+        </ResizableBox>
     );
 }
 

@@ -1,0 +1,12 @@
+body{
+    background-color: #1c1c1c;
+}
+
+iframe {
+    background-color: "white";
+}
+
+.react-resizable{
+    position: relative;
+
+}

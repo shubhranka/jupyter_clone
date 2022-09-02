@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import esbuildWasm from 'esbuild-wasm';
-
+import "./index.css"
 
 esbuildWasm.initialize({
   wasmURL: "https://unpkg.com/esbuild-wasm@0.15.5/esbuild.wasm",

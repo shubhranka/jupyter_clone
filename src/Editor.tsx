@@ -6,7 +6,7 @@ interface EditorProps {
     onSubmitHandle: (inp:string) => void;
 }
 const Editor : React.FC<EditorProps> = ({onSubmitHandle}) => {
-    return <MonacoEditor height="500px" theme='vs-dark' language='javascript' 
+    return <MonacoEditor  theme='vs-dark' language='javascript' 
     onMount={(editor:any,monaco:Monaco)=>{
         // console.log(editor,monaco);
 
