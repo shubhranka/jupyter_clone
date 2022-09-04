@@ -114,7 +114,7 @@ const CodeCell: React.FC<{}> = (props) => {
                 console.log(data);
                 if (iframeRef.current?.contentWindow) {
                   iframeRef.current.contentWindow.postMessage(
-                    {code:data.outputFiles[0].text},
+                    { code: data.outputFiles[0].text },
                     "*"
                   );
                 }
@@ -122,7 +122,7 @@ const CodeCell: React.FC<{}> = (props) => {
                 const errorString = e.toString();
                 if (iframeRef.current?.contentWindow)
                   iframeRef.current.contentWindow.postMessage(
-                    {bundleError:e.errors[0]},
+                    { bundleError: e.errors[0] },
                     "*"
                   );
                 console.log({ e });
@@ -140,96 +140,99 @@ const CodeCell: React.FC<{}> = (props) => {
   // }, [code]);
 
   return (
-    <ResizableBox
-      height={myHeight}
-      width={Infinity}
-      resizeHandles={["s"]}
-      handle={
-        <div className="bottom_bar">
-          <div className="circle1"></div>
-          <div className="circle2"></div>
-          <div className="circle1"></div>
-        </div>
-      }
-      minConstraints={[Infinity, 100]}
-      onResizeStart={() => {
-        if (iframeDivRef?.current) {
-          iframeDivRef.current.appendChild(newDivElement);
-        }
-      }}
-      onResizeStop={(e, t) => {
-        if (iframeDivRef?.current) {
-          try {
-            iframeDivRef.current.removeChild(newDivElement);
-          } catch (e) {
-            console.log(e);
-          }
-        }
-        // setMyHeight(t.size.height);
-      }}
-    >
-      <div className="code_cell">
-        <ResizableBox
-          width={myWidth.widthPercentage * innerWidth}
-          height={Infinity}
-          resizeHandles={["e"]}
-          // minConstraints={[100, 100]}
-          handle={
-            <div className="right_bar" ref={rightBarRef}>
-              <div className="circle1"></div>
-              <div className="circle2"></div>
-              <div className="circle1"></div>
-            </div>
-          }
-          onResizeStart={() => {
-            if (iframeDivRef?.current) {
-              iframeDivRef.current.appendChild(newDivElement);
-            }
-          }}
-          onResizeStop={(e, t) => {
-            if (iframeDivRef?.current) {
-              iframeDivRef.current.removeChild(newDivElement);
-            }
-            // Get size of e
-            // if (editorRef.current) {
-            //   console.log((editorRef.current.width / window.innerWidth));
-            // }
-            const width = t.size.width;
-            // console.log((width),myWidth.widthPercentage,window.innerWidth);
-            // setWidthPercentage((width / window.innerWidth));
-            // console.log(width, width / window.innerWidth);
-            setMyWidth({
-              width: width,
-              widthPercentage: width / window.innerWidth,
-            });
-            // console.log(myWidth);
-          }}
-          onResize={(e, t) => {
-            // console.log(t.size.width,"onResize");
-            // setMyWidth(t.size.width);
-            if (editorRef.current) {
-              editorRef.current.style.width = `${t.size.width - 16}px`;
-            }
-          }}
-        >
-          <div
-            className="editer_wrapper"
-            ref={editorRef}
-            style={{ width: myWidth.widthPercentage * innerWidth - 16 }}
-          >
-            <Editor
-              // onChangeHandler={(inp: string | undefined) => setInput(inp as string)}
-              // onSubmitHandle={() => submitButtonRef.current?.click()}
-              onSubmitHandle={onSubmitListener}
-            />
+    <div className="code_cell_container">
+      <ResizableBox
+        //  className="code_cell_resizable_box"
+        height={myHeight}
+        width={Infinity}
+        resizeHandles={["s"]}
+        handle={
+          <div className="bottom_bar">
+            <div className="circle1"></div>
+            <div className="circle2"></div>
+            <div className="circle1"></div>
           </div>
-        </ResizableBox>
+        }
+        minConstraints={[Infinity, 100]}
+        onResizeStart={() => {
+          if (iframeDivRef?.current) {
+            iframeDivRef.current.appendChild(newDivElement);
+          }
+        }}
+        onResizeStop={(e, t) => {
+          if (iframeDivRef?.current) {
+            try {
+              iframeDivRef.current.removeChild(newDivElement);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+          // setMyHeight(t.size.height);
+        }}
+      >
+        <div className="code_cell">
+          <ResizableBox
+            width={myWidth.widthPercentage * innerWidth}
+            height={Infinity}
+            resizeHandles={["e"]}
+            // minConstraints={[100, 100]}
+            handle={
+              <div className="right_bar" ref={rightBarRef}>
+                <div className="circle1"></div>
+                <div className="circle2"></div>
+                <div className="circle1"></div>
+              </div>
+            }
+            onResizeStart={() => {
+              if (iframeDivRef?.current) {
+                iframeDivRef.current.appendChild(newDivElement);
+              }
+            }}
+            onResizeStop={(e, t) => {
+              if (iframeDivRef?.current) {
+                iframeDivRef.current.removeChild(newDivElement);
+              }
+              // Get size of e
+              // if (editorRef.current) {
+              //   console.log((editorRef.current.width / window.innerWidth));
+              // }
+              const width = t.size.width;
+              // console.log((width),myWidth.widthPercentage,window.innerWidth);
+              // setWidthPercentage((width / window.innerWidth));
+              // console.log(width, width / window.innerWidth);
+              setMyWidth({
+                width: width,
+                widthPercentage: width / window.innerWidth,
+              });
+              // console.log(myWidth);
+            }}
+            onResize={(e, t) => {
+              // console.log(t.size.width,"onResize");
+              // setMyWidth(t.size.width);
+              if (editorRef.current) {
+                editorRef.current.style.width = `${t.size.width - 16}px`;
+              }
+            }}
+          >
+            <div
+              className="editer_wrapper"
+              ref={editorRef}
+              style={{ width: myWidth.widthPercentage * innerWidth - 16 }}
+            >
+              <Editor
+                // onChangeHandler={(inp: string | undefined) => setInput(inp as string)}
+                // onSubmitHandle={() => submitButtonRef.current?.click()}
+                onSubmitHandle={onSubmitListener}
+              />
+            </div>
+          </ResizableBox>
 
-        <div ref={iframeDivRef}>
-          <IFrame iframeRef={iframeRef} />
+          <div ref={iframeDivRef}>
+            <IFrame iframeRef={iframeRef} />
+          </div>
         </div>
-      </div>
-    </ResizableBox>
+      </ResizableBox>
+    </div>
   );
 };
 

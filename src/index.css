@@ -1,5 +1,17 @@
+:root{
+    --primary:#BB86FC;
+    --primaryVariant:#3a3e5c;
+    --secondary:#03DAC6;
+    --secondary2:#D6D5A8;
+    --secondary2Faded:#d6d5a872;
+    --background:#525151;
+    --surface:#121212;
+
+}
 body{
-    background-color: #1c1c1c;
+    background-color: var(--primaryVariant);
+    padding: 0;
+    margin: 0;
 }
 
 iframe {
@@ -14,4 +26,5 @@ iframe {
     display: flex;
     flex-direction: row;
     align-items: center;
+    position: relative;
 }

@@ -6,6 +6,7 @@
     justify-content: center;
     height: 100%;
     width: 100%;
+    /* margin-bottom: 3rem; */
 }
 .code_cell > *{
     width: 100%;
@@ -18,76 +19,61 @@
     border: none;
 }
 
-.react-resizable-handle-s{
-    display: block;
-    position: absolute; 
-    bottom: 0;
-    left: 0;
-    height: 1rem;
-    width: 100%;
-    cursor: row-resize;
-    background-color: aqua;
-}
-
-.react-resizable-handle-s::after{
-    content: "\&\#9679 \&#9679 \&#9679";
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 1rem;
-    width: 100%;
-}
 
 .bottom_bar{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: rgb(216, 216, 216);
+    background-color: #1c1c1c;
     height: 1rem;
     cursor: row-resize;
     margin-bottom: 3rem;
-    width: 10%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 0.5rem;
-    margin-top: 0.4rem;
+    /* border-radius: 0.5rem; */
+    /* margin-top: 0.4rem; */
 }
 
 .circle1{
-    height: 0.5rem;
-    width: 0.5rem;
+    height: 0.2rem;
+    width: 0.2rem;
     border-radius: 50%;
-    background-color: black;
+    background-color: var(--surface);
     margin: 0 0.3rem;
+    background-color: white;
 }
 .circle2{
-    height: 0.6rem;
-    width: 0.6rem;
+    height: 0.2rem;
+    width: 0.2rem;
     border-radius: 50%;
-    background-color: black;
+    background-color: var(--surface);
     margin-top: 0.1rem;
     margin-bottom: 0.1rem;
+    background-color: white;
     /* margin: 0 0.5rem; */
 }
 
 .right_bar{
+    position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgb(216, 216, 216);
-    height: 5rem;
+    background-color: #1c1c1c;
+    height: 100%;
     cursor: row-resize;
     width: 1rem;
-    border-radius: 0.5rem;
-    margin-right: -0.5rem; 
+    /* border-radius: 0.5rem; */
+    margin-right: -0.5rem;
+    right: 0; 
 }
 
 .editer_wrapper{
     height: 100%;
     width: 100%;
+}
+.code_cell_container{
+    margin-bottom: 3rem;
 }

@@ -1,0 +1,13 @@
+.editor_container{
+    margin-bottom: 3rem;
+    border: 1px solid var(--secondary2Faded);
+}
+
+.w-md-editor-bar svg {
+    /* display: none; */
+    /* width: 5rem; */
+    transform: scale(1.70);
+}
+.w-md-editor-bar{
+    width: 100%;
+}

@@ -52,6 +52,9 @@ const Editor: React.FC<EditorProps> = ({ onSubmitHandle }) => {
         tabSize: 2,
         scrollbar:{
             verticalScrollbarSize: 0,
+        },
+        padding:{
+            top: 10,
         }
       }}
     />
