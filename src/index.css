@@ -8,5 +8,10 @@ iframe {
 
 .react-resizable{
     position: relative;
+}
 
+.code_cell .react-resizable{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

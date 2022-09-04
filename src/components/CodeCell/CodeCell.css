@@ -6,7 +6,6 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-    margin-bottom: 3rem;
 }
 .code_cell > *{
     width: 100%;
@@ -28,4 +27,67 @@
     width: 100%;
     cursor: row-resize;
     background-color: aqua;
+}
+
+.react-resizable-handle-s::after{
+    content: "\&\#9679 \&#9679 \&#9679";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1rem;
+    width: 100%;
+}
+
+.bottom_bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(216, 216, 216);
+    height: 1rem;
+    cursor: row-resize;
+    margin-bottom: 3rem;
+    width: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+.circle1{
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 50%;
+    background-color: black;
+    margin: 0 0.3rem;
+}
+.circle2{
+    height: 0.6rem;
+    width: 0.6rem;
+    border-radius: 50%;
+    background-color: black;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+    /* margin: 0 0.5rem; */
+}
+
+.right_bar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(216, 216, 216);
+    height: 5rem;
+    cursor: row-resize;
+    width: 1rem;
+    border-radius: 0.5rem;
+    margin-right: -0.5rem; 
+}
+
+.editer_wrapper{
+    height: 100%;
+    width: 100%;
 }

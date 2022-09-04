@@ -3,7 +3,7 @@ interface IFrameProps {
 }
 const IFrame:React.FC<IFrameProps> = ({iframeRef})=>{
     return (
-        <iframe style={{backgroundColor:"white"}} ref={iframeRef} sandbox="allow-scripts" title="myIframe" ></iframe>
+        <iframe style={{backgroundColor:"white"}} ref={iframeRef} sandbox="allow-scripts" title="myIframe"></iframe>
     )   
 }
 
