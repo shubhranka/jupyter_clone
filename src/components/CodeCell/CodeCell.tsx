@@ -1,22 +1,28 @@
 import { useEffect, useRef, useState } from "react";
+import { RootState } from "../../store/store";
 import Editor from "../../Editor";
 import IFrame from "../IFrame/IFrame";
 import bundler from "../../bundler/bundler";
 import "./CodeCell.css";
-import { Resizable, ResizableBox } from "react-resizable";
-import { initialize } from "esbuild-wasm";
+import { ResizableBox } from "react-resizable";
+import { useDispatch, useSelector } from "react-redux";
+import { actions } from "../../store/features/cell/cellReducer";
 
-const createBottomBar = () => {
-  return (
-    <div className="bottom_bar">
-      <div className="circle1"></div>
-      <div className="circle2"></div>
-      <div className="circle1"></div>
-    </div>
-  );
+interface CodeCellProps {
+  cellData: any;
 };
+// const createBottomBar = () => {
+//   return (
+//     <div className="bottom_bar">
+//       <div className="circle1"></div>
+//       <div className="circle2"></div>
+//       <div className="circle1"></div>
+//     </div>
+//   );
+// };
 
-const CodeCell: React.FC<{}> = (props) => {
+const CodeCell: React.FC<CodeCellProps> = (props) => {
+  const dispath = useDispatch()
   const newDivElement = document.createElement("div");
   newDivElement.style.position = "absolute";
   newDivElement.style.top = "0";
@@ -31,13 +37,12 @@ const CodeCell: React.FC<{}> = (props) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeDivRef = useRef<HTMLIFrameElement>(null);
   const editorRef = useRef<HTMLIFrameElement>(null);
-  const [myHeight, setMyHeight] = useState<number>(300);
   const rightBarRef = useRef<HTMLDivElement>(null);
+  const code = useSelector((state: RootState) => state.cellReducer.data[props.cellData.id].content);
   const [myWidth, setMyWidth] = useState<{
     width: number;
     widthPercentage: number;
   }>({ width: window.innerWidth * 0.5, widthPercentage: 0.5 });
-  const [myWidthPercentage, setMyWidthPercentage] = useState<number>(0.5);
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   // const [editorWidth,setEditorWidth] = useState<number>(0);
   // const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -65,7 +70,8 @@ const CodeCell: React.FC<{}> = (props) => {
       window.removeEventListener("resize", resizeFunction);
     };
   }, []);
-  const onSubmitListener = (inp: string) => {
+
+  useEffect(()=>{
     (() => {
       try {
         if (iframeRef.current) {
@@ -108,9 +114,9 @@ const CodeCell: React.FC<{}> = (props) => {
                 </html>
                 `;
           setTimeout(async () => {
-            if (inp !== "") {
+            if (code !== "") {
               try {
-                const data = await bundler(inp);
+                const data = await bundler(code);
                 console.log(data);
                 if (iframeRef.current?.contentWindow) {
                   iframeRef.current.contentWindow.postMessage(
@@ -119,7 +125,6 @@ const CodeCell: React.FC<{}> = (props) => {
                   );
                 }
               } catch (e: any) {
-                const errorString = e.toString();
                 if (iframeRef.current?.contentWindow)
                   iframeRef.current.contentWindow.postMessage(
                     { bundleError: e.errors[0] },
@@ -134,6 +139,10 @@ const CodeCell: React.FC<{}> = (props) => {
         console.log(e);
       }
     })();
+  },[code])
+  
+  const onSubmitListener = (inp: string) => {
+    dispath(actions.update_cell({id:props.cellData.id,content:inp}));
   };
   // useEffect(() => {
 
@@ -143,7 +152,7 @@ const CodeCell: React.FC<{}> = (props) => {
     <div className="code_cell_container">
       <ResizableBox
         //  className="code_cell_resizable_box"
-        height={myHeight}
+        height={300}
         width={Infinity}
         resizeHandles={["s"]}
         handle={
@@ -223,6 +232,7 @@ const CodeCell: React.FC<{}> = (props) => {
                 // onChangeHandler={(inp: string | undefined) => setInput(inp as string)}
                 // onSubmitHandle={() => submitButtonRef.current?.click()}
                 onSubmitHandle={onSubmitListener}
+                cellData={props.cellData}
               />
             </div>
           </ResizableBox>

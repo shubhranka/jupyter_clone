@@ -1,0 +1,27 @@
+.cell_list_cell_container{
+    position: relative;
+}
+.cell_list_cell_container .top_buttons{
+    position: absolute;
+    /* background-color: #1c1c1c; */
+    color: white;
+    right: 0;
+    top:.1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* width: 10%; */
+}
+
+.top_buttons span{
+    margin: 0 0.1rem;
+    background-color: #1c1c1c;
+    border-radius: 50%;
+    font-size: 110%;
+    padding: 0.1rem;
+    display: flex;
+    /* flex-direction: row; */
+    /* justify-content: center; */
+    /* align-items: center; */
+}

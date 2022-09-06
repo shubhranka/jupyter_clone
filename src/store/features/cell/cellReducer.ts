@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import  {ActionType}  from '../../action-types/action-types';
 // import * as allActions from '../../actions/actions';
-import shortUUID from 'short-uuid';
+// import shortUUID from 'short-uuid';
+import { v4 as uuid } from 'uuid';
 
 export interface CellState {
   loading:boolean;
@@ -51,12 +52,14 @@ export const cellSlice = createSlice({
       }
       state.order[index] = state.order[targetIndex];
       state.order[targetIndex] = id;
+      state.data[id].index = targetIndex;
+      state.data[state.order[index]].index = index;
     },
     [ActionType.INSERT_CELL_AFTER]: (state, action: PayloadAction<{id: string | null, type: string}>) => {
       const { id, type } = action.payload;
       const index = state.order.findIndex((item) => item === id);
       const cell = {
-        id: shortUUID.generate(),
+        id: uuid(),
         content: '',
         type,
         bundle: {
@@ -72,10 +75,10 @@ export const cellSlice = createSlice({
         state.order.splice(index + 1, 0, cell.id);
       }
     },
-    [ActionType.ADD_CELL]: (state, action: PayloadAction<{type: string}>) => {
-      const { type } = action.payload;
+    [ActionType.ADD_CELL]: (state, action: PayloadAction<string>) => {
+      const  type  = action.payload;
       const cell = {
-        id: shortUUID.generate(),
+        id: uuid(),
         content: '',
         type,
         bundle: {
@@ -93,4 +96,4 @@ export const cellSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const actions = cellSlice.actions
 
-export default cellSlice.reducer
+export default cellSlice.reducer;

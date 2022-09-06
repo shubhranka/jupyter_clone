@@ -1,3 +1,5 @@
+import { RootState } from "./store/store";
+import { useSelector } from "react-redux";
 import MonacoEditor from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 export type Monaco = typeof monaco;
@@ -5,9 +7,11 @@ interface EditorProps {
   // onChangeHandler: (value: string | undefined) => void;
   onSubmitHandle: (inp: string) => void;
     // editorRef: any
+  cellData: any;
 }
 let timer:any;
-const Editor: React.FC<EditorProps> = ({ onSubmitHandle }) => {
+const Editor: React.FC<EditorProps> = ({ onSubmitHandle,cellData }) => {
+  // console.log(cellContent);
   return (
     <MonacoEditor
       theme="vs-dark"
@@ -22,9 +26,10 @@ const Editor: React.FC<EditorProps> = ({ onSubmitHandle }) => {
         }, 1000);
       
       }}
-      onMount={(editor: any, monaco: Monaco) => {
+      onMount={(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
         // console.log(editor,monaco);
-
+        console.log("onMountEditor");
+        editor.setValue(cellData.content);
         editor.addAction({
           id: "my-unique-id",
           label: "My First Action",
@@ -34,7 +39,6 @@ const Editor: React.FC<EditorProps> = ({ onSubmitHandle }) => {
           run: function (ed: any) {
             console.log("My First Action was triggered");
             onSubmitHandle(editor.getValue());
-            return null;
           },
         });
       }}
