@@ -1,6 +1,4 @@
 import { useSelector } from "react-redux";
-import CodeCell from "../../components/CodeCell/CodeCell";
-import TextEditor from "../../components/TextEditor/TextEditor";
 import { RootState } from "../../store/store";
 import CellContainer from "../CellContainer";
 const CellList = () => {
@@ -9,7 +7,6 @@ const CellList = () => {
   );
   // const cellData = useSelector((state: RootState) => state.cellReducer.data);
   // console.log(cells);
-  const state = useSelector((state: RootState) => state.cellReducer);
   // console.log(state);
   return (
     <div>

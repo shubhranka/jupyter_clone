@@ -28,7 +28,7 @@
     background-color: #1c1c1c;
     height: 1rem;
     cursor: row-resize;
-    margin-bottom: 3rem;
+    /* margin-bottom: 1rem; */
     width: 100%;
     margin-left: auto;
     margin-right: auto;
@@ -75,5 +75,5 @@
     width: 100%;
 }
 .code_cell_container{
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
 }
