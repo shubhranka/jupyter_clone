@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { RootState } from "../../store/store";
+import { RootState, useAppDispatch } from "../../store/store";
 import Editor from "../../Editor";
 import IFrame from "../IFrame/IFrame";
 import bundler from "../../bundler/bundler";
 import "./CodeCell.css";
 import { ResizableBox } from "react-resizable";
 import { useDispatch, useSelector } from "react-redux";
-import { actions } from "../../store/features/cell/cellReducer";
+import { actions, CellData } from "../../store/features/cell/cellReducer";
+import { bundleAction } from "../../store/features/bundle/bundleReducer";
+import { Grid } from "react-loader-spinner";
 
 interface CodeCellProps {
-  cellData: any;
-};
+  cellData: CellData;
+}
 // const createBottomBar = () => {
 //   return (
 //     <div className="bottom_bar">
@@ -21,8 +23,23 @@ interface CodeCellProps {
 //   );
 // };
 
-const CodeCell: React.FC<CodeCellProps> = (props) => {
-  const dispath = useDispatch()
+const CodeCell: React.FC<CodeCellProps> = ({ cellData }) => {
+  const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
+  let bundleState = useSelector(
+    (state: RootState) => state.bundleReducer[cellData.id]
+  );
+  if(!bundleState){
+    bundleState = {
+      code: "",
+      error: null,
+      loading: false,
+    }
+  }
+  // const [loading, setLoading] = useState(bundleState.loading);
+  // const cellState = useSelector((state: RootState) => state.cellReducer);
+  console.log(bundleState);
+  console.log(cellData);
   const newDivElement = document.createElement("div");
   newDivElement.style.position = "absolute";
   newDivElement.style.top = "0";
@@ -32,18 +49,27 @@ const CodeCell: React.FC<CodeCellProps> = (props) => {
   newDivElement.style.backgroundColor = "transparent";
   newDivElement.style.zIndex = "100";
   // newDivElement.style.pointerEvents = "none";
-
+  let iframeStyle = {};
+  if (bundleState.loading) {
+    iframeStyle = {
+      blur: "blur(5px)",
+    };
+  }
   // const [code, setCode] = useState<string>("");
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeDivRef = useRef<HTMLIFrameElement>(null);
   const editorRef = useRef<HTMLIFrameElement>(null);
   const rightBarRef = useRef<HTMLDivElement>(null);
-  const code = useSelector((state: RootState) => state.cellReducer.data[props.cellData.id].content);
+
+  const code = useSelector(
+    (state: RootState) => state.cellReducer.data[cellData.id].content
+  );
   const [myWidth, setMyWidth] = useState<{
     width: number;
     widthPercentage: number;
   }>({ width: window.innerWidth * 0.5, widthPercentage: 0.5 });
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
+  // console.log(srcDocObj);
   // const [editorWidth,setEditorWidth] = useState<number>(0);
   // const submitButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -71,24 +97,27 @@ const CodeCell: React.FC<CodeCellProps> = (props) => {
     };
   }, []);
 
-  useEffect(()=>{
-    (() => {
-      try {
-        if (iframeRef.current) {
-          iframeRef.current.srcdoc = `
-                <html>
-                    <body>
-                    <div id="root"></div>
+  useEffect(() => {
+    appDispatch(bundleAction({ id: cellData.id, code: code }));
+  }, [code]);
+
+  useEffect(() => {
+    if (iframeRef.current){
+      iframeRef.current.innerHTML = "";
+      iframeRef.current.srcdoc = `
+      <html>
+      <body>
+      <div id="root"></div>
                     </body>
                     <script>
                     const handleError = (e) => {
                       const errorTitle = e.stack.split(':')[0];
                       console.log(errorTitle);
                       document.body.innerHTML+= '<pre style="color:red">'+ '<h3>' + errorTitle+' :' + '</h3>' + e.message + '</pre>';
-                      console.log({e});
+                      // console.log({e});
                     }
                     const handleBundleError = (e) => {
-                      console.log(e);
+                      // console.log(e);
                       const errorTitle = "Syntax Error";
                       document.body.innerHTML+= '<pre style="color:red">'+ '<h3>' + errorTitle + ' :' + '</h3>' + 'At ' + e.location.line+ ':' + e.location.length +' ' + e.text + '</pre>';
                     }
@@ -97,52 +126,42 @@ const CodeCell: React.FC<CodeCellProps> = (props) => {
                       handleError(e.error);
                     });
                     window.addEventListener('message', (e) => {
-                      console.log(e)
-                        if(e.data.bundleError){
-                          handleBundleError(e.data.bundleError);
-                          // console.log(e)
-                        }else{
-                          try{
-                              eval(e.data.code);
+                      // console.log(e)
+                      if(e.data.bundleError){
+                        handleBundleError(e.data.bundleError);
+                        // console.log(e)
+                      }else{
+                        try{
+                          eval(e.data.code);
                           }catch(e){
-                              handleError(e);
+                            handleError(e);
                           }
                         }
                         
-                    },false);
-                    </script>
-                </html>
-                `;
-          setTimeout(async () => {
-            if (code !== "") {
-              try {
-                const data = await bundler(code);
-                console.log(data);
-                if (iframeRef.current?.contentWindow) {
-                  iframeRef.current.contentWindow.postMessage(
-                    { code: data.outputFiles[0].text },
-                    "*"
-                  );
-                }
-              } catch (e: any) {
-                if (iframeRef.current?.contentWindow)
-                  iframeRef.current.contentWindow.postMessage(
-                    { bundleError: e.errors[0] },
-                    "*"
-                  );
-                console.log({ e });
-              }
-            }
-          }, 50);
+                      },false);
+                      </script>
+                      </html>
+                      `;
+                      setTimeout(() => {
+      if (iframeRef.current) {
+        if (bundleState.error) {
+          iframeRef.current.contentWindow?.postMessage(
+            { bundleError: bundleState.error },
+            "*"
+            );
+        } else {
+          iframeRef.current.contentWindow?.postMessage(
+            { code: bundleState.code },
+            "*"
+            );
+          }
         }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  },[code])
+      }, 50);
+    }
+  }, [bundleState]);
   
   const onSubmitListener = (inp: string) => {
-    dispath(actions.update_cell({id:props.cellData.id,content:inp}));
+    dispatch(actions.update_cell({ id: cellData.id, content: inp }));
   };
   // useEffect(() => {
 
@@ -232,13 +251,25 @@ const CodeCell: React.FC<CodeCellProps> = (props) => {
                 // onChangeHandler={(inp: string | undefined) => setInput(inp as string)}
                 // onSubmitHandle={() => submitButtonRef.current?.click()}
                 onSubmitHandle={onSubmitListener}
-                cellData={props.cellData}
+                cellData={cellData}
               />
             </div>
           </ResizableBox>
 
-          <div ref={iframeDivRef}>
-            <IFrame iframeRef={iframeRef} />
+          <div ref={iframeDivRef} style={{ position: "relative" }}>
+            {bundleState.loading && (
+              <Grid
+                height="80"
+                width="80"
+                color="#1c1c1c"
+                ariaLabel="grid-loading"
+                radius="12.5"
+                wrapperStyle={{ position: "absolute", top: "50%", left: "50%", transform:"translate(-50%,-50%)",backgroundColor:"white" }}
+                wrapperClass=""
+                visible={true}
+              />
+            )}
+            <IFrame iframeRef={iframeRef} style={iframeStyle} />
           </div>
         </div>
       </ResizableBox>

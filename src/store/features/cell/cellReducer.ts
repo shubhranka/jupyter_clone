@@ -5,23 +5,22 @@ import { ActionType } from "../../action-types/action-types";
 // import shortUUID from 'short-uuid';
 import { v4 as uuid } from "uuid";
 
+export interface CellData{
+    id: string;
+    content: string;
+    type: string;
+};
+
+interface CellStateData{
+    [key:string]:CellData
+}
+
 export interface CellState {
   loading: boolean;
   error: string | null;
   order: any[];
-  data: {
-    [key: string]: {
-      id: any;
-      content: string;
-      type: string;
-      bundle: {
-        code: string;
-        err: string;
-      };
-      index: number;
-    };
-  };
-}
+  data: CellStateData
+};
 
 const initialState: CellState = {
   loading: false,
@@ -51,14 +50,12 @@ export const cellSlice = createSlice({
       action: PayloadAction<{ id: string; direction: "up" | "down" }>
     ) => {
       const { id, direction } = action.payload;
-      const index = state.data[id].index;
+      const index = state.order.findIndex((item) => item === id);
       const targetIndex = direction === "up" ? index - 1 : index + 1;
       if (targetIndex < 0 || targetIndex > (state.order.length - 1)) {
         return;
       }
-      state.data[id].index = targetIndex;
       state.order[index] = state.order[targetIndex];
-      state.data[state.order[index]].index = index;
       state.order[targetIndex] = id;
     },
     [ActionType.INSERT_CELL_AFTER]: (
@@ -75,7 +72,6 @@ export const cellSlice = createSlice({
           code: "",
           err: "",
         },
-        index: index + 1,
       };
       state.data[cell.id] = cell;
       if (index < 0) {
@@ -94,7 +90,6 @@ export const cellSlice = createSlice({
           code: "",
           err: "",
         },
-        index: state.order.length,
       };
       state.data[cell.id] = cell;
       state.order.push(cell.id);
@@ -116,11 +111,9 @@ export const cellSlice = createSlice({
       };
       if (index < 0) {
         state.order.unshift(cell.id);
-        index = state.order.length - 1;
       } else {
         state.order.splice(index, 0, cell.id);
       }
-      cell.index = index;
       state.data[cell.id] = cell;
     },
   },
